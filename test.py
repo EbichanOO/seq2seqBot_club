@@ -1,4 +1,5 @@
-import MeCab as MCB
-sin = "すもももももももものうち"
-a = MCB.Tagger('-Owakati')
-print(a.parse(sin))
+a = "こんにち", "世界"
+b = []
+b += a
+#b[0] += a[1]
+print(b)
