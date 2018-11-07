@@ -8,6 +8,7 @@ class DataSet:
     def MakeDict(self, savePath='./datas/', dictName='dict'):
         dirList = os.listdir(self.filePath)
         textFiles = []
+
         for dump in dirList:
             if(re.search('.txt',dump)):
                 textFiles.append(self.filePath + dump)
@@ -19,6 +20,7 @@ class DataSet:
             print("Found {} text files.".format(len(textFiles)))
             
             tasknum = 0
+            spsp = 0
             for dump in textFiles:
                 with open(dump, 'r', encoding='utf-8') as f:
                     temp = f.read().split('\n')
@@ -38,15 +40,27 @@ class DataSet:
                             self.sentences[i-1] += tmp
                 for a_sentence in self.sentences:
                     try:
-                        dictWords.append(MeCab.Tagger('-Owakati').parse(a_sentence.strip("\n")).split(" "))
+                        dictWords += MeCab.Tagger('-Owakati').parse(a_sentence).split(" ")
                     except:
                         pass
                 tasknum += 1
                 print("Do " + str(tasknum)+"/"+str(len(textFiles)) + " mecab process")
                 i = 0
+
             print("read end")
             listWords = list(set(dictWords))
-            print(len(listWords))
+
+            import pickle as pkl
+            with open(savePath+dictName, 'wb') as f:
+                pkl.dump(listWords, f)
+            print("save dict")
+
+    def readDict(self, savePath='./datas/', dictName='dict'):
+        print("reading dict ...")
+        import pickle as pkl
+        with open(savePath+dictName, 'rb') as f:
+            return pkl.load(f)
 
 DD = DataSet()
 DD.MakeDict()
+#print(DD.readDict())
